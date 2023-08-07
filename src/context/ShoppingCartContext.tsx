@@ -25,18 +25,46 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const getItembyQuantity = (id: number) => {
     return cartItem.find((item) => item.id === id)?.quantity || 0;
   };
+
   const increaseItem = (id: number) => {
     setCartItem((pre) => {
-      let x = pre.find((item) => item.id === id);
-      if (x) {
-        return [...pre, { ...x, quantity: (x.quantity += 1) }];
-      } else {
+      if (!pre.find((item) => item.id === id)) {
         return [...pre, { id: id, quantity: 1 }];
+      } else {
+        return pre.map((item) => {
+          return item.id === id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item;
+        });
       }
     });
   };
+
+  const decreaseItem = (id: number) => {
+    setCartItem((pre) => {
+      return pre.find((item) => item.id === id)
+        ? pre.map((item) => {
+            if (item.id === id && item.quantity >= 1) {
+              return { ...item, quantity: item.quantity - 1 };
+            } else {
+              return item;
+            }
+          })
+        : pre;
+    });
+  };
+
+  const removeItem = (id:number)=>{
+    setCartItem((pre)=>{
+      return pre.filter(item=>item.id !==id)
+    })
+
+  }
+
   return (
-    <ShoppingCartContext.Provider value={{ getItembyQuantity, increaseItem }}>
+    <ShoppingCartContext.Provider
+      value={{ getItembyQuantity, increaseItem, decreaseItem,removeItem }}
+    >
       {children}
     </ShoppingCartContext.Provider>
   );

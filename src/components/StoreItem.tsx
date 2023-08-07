@@ -10,7 +10,7 @@ type StoreItemProps = {
 };
 
 const StoreItem = ({ id, name, price, imgUrl }: StoreItemProps) => {
-  const {getItembyQuantity, increaseItem}=useShoppingCart()
+  const {getItembyQuantity, increaseItem, decreaseItem,removeItem}=useShoppingCart()
   const quantity = getItembyQuantity(id);
   return (
     <Card>
@@ -38,11 +38,11 @@ const StoreItem = ({ id, name, price, imgUrl }: StoreItemProps) => {
               className="d-flex align-items-center justify-content-center flex-row"
               style={{ gap: ".5rem" }}
             >
-              <Button>-</Button>
+              <Button onClick={()=>decreaseItem(id)}>-</Button>
               <div>{quantity}</div>
               <Button onClick={()=>increaseItem(id)}>+</Button>
             </div>
-            <Button variant="danger" size="sm">
+            <Button onClick={()=>removeItem(id)} variant="danger" size="sm">
               Remove
             </Button>
           </div>
